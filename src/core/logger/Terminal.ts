@@ -1,18 +1,36 @@
 import * as serverline from "serverline";
 import { Logger } from "./Logger";
 import { LogLevel } from "./LogLevel";
+import { getDecoratedCommands } from '../commands/CommandDecorator';
+
+import { CommandScanner } from "../commands/CommandScanner";
+import { CommandMetadata } from "../commands/CommandMetadata";
 
 export class Terminal {
   private readonly logger: Logger;
   constructor() {
     this.logger = new Logger();
     this.initInputStream();
+    this.registerCommands();
+  }
+
+  private async registerCommands() {
+    await CommandScanner.run();
+    const commands = getDecoratedCommands();
+
+    commands.forEach((command: CommandMetadata) => {
+      this.info(`Command registered: ${command.name}`);
+    });
   }
 
   private initInputStream() {
     serverline.init({
       prompt: "→ "
-    })
+    });
+
+    serverline.on("line", (line: string) => {
+      this.info(line);
+    });
   }
 
   public debug(message: string) {
@@ -37,5 +55,9 @@ export class Terminal {
 
   public fatal(message: string) {
     this.logger.write(LogLevel.FATAL, message);
+  }
+
+  get serverline() {
+    return serverline;
   }
 }
