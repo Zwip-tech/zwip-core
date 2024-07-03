@@ -1,3 +1,5 @@
+import { CommandSender } from "./CommandSender";
+
 export interface CommandInterface {
-  execute(): void;
+  execute(sender: CommandSender, args: string[]): void;
 }

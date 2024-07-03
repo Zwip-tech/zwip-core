@@ -3,11 +3,11 @@ import { Permission } from "../permissions/PermissionDecorator";
 import { CommandBase } from "./CommandBase";
 import { Command } from "./CommandDecorator";
 
-@Command("stop", ["s"])
-@Permission("zwip.stop")
-export class CommandStop extends CommandBase {
+@Command("hello", ["hi"])
+@Permission("zwip.hello")
+export class CommandHello extends CommandBase {
   public execute(sender: CommandSender, args: string[]): void {
-    console.log("CommandStop executed !!!");
-    console.log("Command label : ", this.label);
+    console.log("CommandHello executed !!!", args);
+    console.log("Command label from command executor: ", this.label);
   }
 }

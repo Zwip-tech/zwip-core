@@ -1,4 +1,7 @@
+import { CommandBase } from "./CommandBase";
+
 export interface CommandMetadata {
-  name: string;
-  target: unknown;
+  label: string;
+  aliases: string[];
+  target: new (label: string, aliases: string[]) => CommandBase;
 }
