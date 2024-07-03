@@ -6,8 +6,10 @@ import { CommandManager } from "../commands/CommandManager";
 export class Terminal {
   private readonly logger: Logger;
   private readonly commandManager: CommandManager;
+  public static instance: Terminal;
 
   constructor() {
+    Terminal.instance = this;
     this.logger = new Logger();
     this.initInputStream();
     this.commandManager = new CommandManager(this);

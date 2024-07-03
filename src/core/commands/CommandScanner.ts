@@ -1,4 +1,4 @@
-import { readdirSync } from 'fs';
+import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
 
 const TS_EXTENSION = '.ts';
@@ -6,12 +6,18 @@ const COMMANDS_PATH = join(__dirname, '..', 'commands');
 
 export class CommandScanner {
   public static async run(): Promise<void> {
-    const files = readdirSync(COMMANDS_PATH);
-    for (const file of files) {
-      if (file.endsWith(TS_EXTENSION)) {
-        const filePath = join(COMMANDS_PATH, file);
+    await this.scanDirectory(COMMANDS_PATH);
+  }
 
-        await import(filePath);
+  private static async scanDirectory(directory: string): Promise<void> {
+    const files = readdirSync(directory);
+    for (const file of files) {
+      const path = join(directory, file);
+      
+      if (path.endsWith(TS_EXTENSION)) {
+        await import(path);
+      } else if (lstatSync(path).isDirectory()) {
+        await this.scanDirectory(path);
       }
     }
   }
