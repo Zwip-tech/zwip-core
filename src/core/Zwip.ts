@@ -14,31 +14,7 @@ export class Zwip {
     const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
     client.on(Events.ClientReady, () => {
-      this.terminal.log("Client is ready");
-      this.terminal.log("Client is ready");
-      this.terminal.log("Client is ready");
-      this.terminal.log("Client is ready");
-      this.terminal.log("Client is ready");
-      this.terminal.log("Client is ready");
-      this.terminal.debug("Client is ready");
-      this.terminal.debug("Client is ready");
-      this.terminal.debug("Client is ready");
-      this.terminal.debug("Client is ready");
-      this.terminal.debug("Client is ready");
-      this.terminal.info("Client is ready");
-      this.terminal.info("Client is ready");
-      this.terminal.info("Client is ready");
-      this.terminal.info("Client is ready");
-      this.terminal.warn("Client is ready");
-      this.terminal.warn("Client is ready");
-      this.terminal.warn("Client is ready");
-      this.terminal.warn("Client is ready");
-      this.terminal.error("Client is ready");
-      this.terminal.error("Client is ready");
-      this.terminal.fatal("Client is ready");
-      this.terminal.fatal("Client is ready");
-      this.terminal.fatal("Client is ready");
-      this.terminal.fatal("Client is ready");
+      // Bot is ready
     });
 
     client.login(Bun.env.TEMP_TESTBOT_TOKEN);

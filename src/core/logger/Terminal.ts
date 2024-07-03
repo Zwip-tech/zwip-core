@@ -1,18 +1,26 @@
 import * as serverline from "serverline";
 import { Logger } from "./Logger";
 import { LogLevel } from "./LogLevel";
+import { CommandManager } from "../commands/CommandManager";
 
 export class Terminal {
   private readonly logger: Logger;
+  private readonly commandManager: CommandManager;
+
   constructor() {
     this.logger = new Logger();
     this.initInputStream();
+    this.commandManager = new CommandManager(this);
   }
 
   private initInputStream() {
     serverline.init({
       prompt: "→ "
-    })
+    });
+
+    serverline.on("line", (line: string) => {
+      this.commandManager.handleCommand(line);
+    });
   }
 
   public debug(message: string) {
@@ -37,5 +45,9 @@ export class Terminal {
 
   public fatal(message: string) {
     this.logger.write(LogLevel.FATAL, message);
+  }
+
+  get serverline() {
+    return serverline;
   }
 }
