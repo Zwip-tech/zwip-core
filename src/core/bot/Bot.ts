@@ -1,4 +1,5 @@
 import { Client, GatewayIntentBits, Events, ActivityType } from "discord.js";
+import { Terminal } from "../logger/Terminal";
 
 export class Bot {
   public id: string;
@@ -15,7 +16,7 @@ export class Bot {
     const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
     client.on(Events.ClientReady, () => {
-      // Bot is ready
+      Terminal.instance.info(`Bot ${this.id} is loaded and ready to go!`);
       client.user?.setPresence({ status: "dnd" })
       client.user?.setActivity("Made with Zwip", { type: ActivityType.Custom });
     });
@@ -33,5 +34,12 @@ export class Bot {
 
   public destroy() {
     // Destroy the bot
+  }
+
+  public toJSON() {
+    return  JSON.stringify({
+      id: this.id,
+      token: this.token
+    });
   }
 }

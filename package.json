@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "bun build ./index.ts --compile --outfile ./dist/Zwip",
-    "dev": "bun --watch ./index.ts",
+    "dev": "mkdir -p ./run && cd ./run && bun --watch ../index.ts",
     "test": "bun test"
   },
   "devDependencies": {
