@@ -10,9 +10,9 @@ export class CommandManager {
   private terminal: Terminal;
   
   constructor(terminal: Terminal) {
-      this.registeredCommands = [];
-      this.terminal = terminal;
-      this.scanAndRegisterCommands();
+    this.registeredCommands = [];
+    this.terminal = terminal;
+    this.scanAndRegisterCommands();
   }
 
   private async scanAndRegisterCommands() {
@@ -41,7 +41,7 @@ export class CommandManager {
   
   public registerCommand(commandMeta: CommandMetadata) {
     this.registeredCommands.push(new commandMeta.target(commandMeta.label, commandMeta.aliases));
-    this.terminal.info(`Command registered: ${commandMeta.label}`);
+    this.terminal.debug(`Command registered: ${commandMeta.label}`);
   }
 
   get commands() {
