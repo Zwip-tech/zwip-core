@@ -4,7 +4,7 @@
     "lib": ["ESNext"],
     "module": "esnext",
     "target": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "Bundler",
     "moduleDetection": "force",
     "allowImportingTsExtensions": true,
     "noEmit": true,
@@ -15,7 +15,9 @@
     "jsx": "preserve",
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "allowJs": true,
+    "allowJs": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "types": [
       "bun-types" // add Bun global
     ]
