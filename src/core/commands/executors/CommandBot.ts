@@ -1,4 +1,5 @@
 import { ActionCreateBot } from "../../actions/ActionCreateBot";
+import { ActionDeleteBot } from "../../actions/ActionDeleteBot";
 import { Permission } from "../../permissions/PermissionDecorator";
 import { CommandBase } from "../CommandBase";
 import { Command } from "../CommandDecorator";
@@ -22,6 +23,13 @@ export class CommandBot extends CommandBase {
           }
           ActionCreateBot.run(args[1]);
             break;
+        case "delete":
+          if (args.length < 2) {
+            Terminal.instance.error("Invalid usage: !bot delete <id>");
+            return;
+          }
+          ActionDeleteBot.run(args[1]);
+          return;
         default:
           throw new Error("Invalid usage: !bot create <token>");
       }

@@ -1,6 +1,6 @@
 import { Terminal } from "../logger/Terminal";
 import { Bot } from "./Bot";
-import { mkdir, readdir } from "node:fs/promises";
+import { mkdir, readdir, unlink } from "node:fs/promises";
 
 export class BotManager {
   private static readonly  BOTS_FOLDER = "./bots";
@@ -17,6 +17,16 @@ export class BotManager {
     }
     bot.start();
     this.bots.push(bot);
+  }
+
+  public unregisterBot(bot: Bot) {
+    if (!bot) {
+      Terminal.instance.error(`Bot unregistration failed. Bot undefined.`);
+      return;
+    }
+
+    bot.stop();
+    this.bots = this.bots.filter((b) => b.id !== bot.id);
   }
 
   public getBot(id: string) {
@@ -52,5 +62,11 @@ export class BotManager {
     }
 
     Bun.write(`${BotManager.BOTS_FOLDER}/${bot.id}.json`, bot.toJSON());
+  }
+
+  public async deleteBot(bot: Bot) {
+    this.unregisterBot(bot);
+    await unlink(`${BotManager.BOTS_FOLDER}/${bot.id}.json`);
+    Terminal.instance.info(`Bot deleted with id: ${bot.id}`);
   }
 }
