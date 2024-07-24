@@ -1,6 +1,5 @@
 import { Terminal } from "./logger/Terminal";
 import { BotManager } from "./bot/BotManager";
-import { Bot } from "./bot/Bot";
 
 export class Zwip {
   public terminal: Terminal;
