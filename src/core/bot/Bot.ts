@@ -1,14 +1,17 @@
-import { Client, GatewayIntentBits, Events, ActivityType } from "discord.js";
+import { Client, GatewayIntentBits, Events, ActivityType, PresenceStatusData } from "discord.js";
 import { Terminal } from "../logger/Terminal";
+import { ActionChangePresence } from "../actions/ActionChangePresence";
 
 export class Bot {
   public id: string;
   public isMaster: boolean;
   public token: string;
-  private client?: Client;
+  public client?: Client;
+  public presence: PresenceStatusData;
 
-  public constructor(id: string, token: string) {
+  public constructor(id: string, token: string, presence: PresenceStatusData) {
     this.id = id;
+    this.presence = presence ?? 'online';
     this.isMaster = false;
     this.token = token;
     this.client = undefined;
@@ -19,7 +22,7 @@ export class Bot {
 
     this.client.on(Events.ClientReady, () => {
       Terminal.instance.info(`Bot ${this.id} is loaded and ready to go!`);
-      this.client?.user?.setPresence({ status: "dnd" })
+      this.client?.user?.setPresence({ status: this.presence });
       this.client?.user?.setActivity("Made with Zwip", { type: ActivityType.Custom });
     });
 
@@ -43,7 +46,8 @@ export class Bot {
   public toJSON() {
     return  JSON.stringify({
       id: this.id,
-      token: this.token
+      token: this.token,
+      presence: this.presence
     });
   }
 }

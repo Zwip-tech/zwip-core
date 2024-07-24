@@ -49,8 +49,15 @@ export class BotManager {
     for (const file of botFiles) {
       const json = await Bun.file(`${BotManager.BOTS_FOLDER}/${file}`).text();
       const botStub = JSON.parse(json);
-      const bot = new Bot(botStub.id, botStub.token);
+      const bot = new Bot(botStub.id, botStub.token, botStub.presence);
       this.registerBot(bot);
+    }
+  }
+
+  public async unloadAll() {
+    Terminal.instance.debug("Unloading all bots...");
+    for (const bot of this.bots) {
+      this.unregisterBot(bot);
     }
   }
 
