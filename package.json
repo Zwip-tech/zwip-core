@@ -3,8 +3,9 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "build": "bun build ./index.ts --compile --outfile ./dist/Zwip",
-    "dev": "bun --watch ./index.ts",
+    "start": "mkdir -p ./run && cd ./run && bun run ../index.ts",
+    "build:executable": "bun build ./index.ts --compile --outfile ./dist/Zwip",
+    "dev": "mkdir -p ./run && cd ./run && bun --watch ../index.ts",
     "test": "bun test"
   },
   "devDependencies": {
