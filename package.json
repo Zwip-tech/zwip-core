@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "start": "mkdir -p ./run && cd ./run && bun run ../index.ts",
-    "build:executable": "bun build ./index.ts --compile --outfile ./dist/Zwip",
+    "build:bundle": "bun build index.ts --target bun --outfile ./dist/Zwip.js --minify",
+    "build:executable:apple-silicon": "bun build index.ts --compile --outfile ./dist/Zwip --minify",
+    "build:executable:windows-x64": "bun build index.ts --compile --target bun-windows-x64 --outfile ./dist/Zwip --minify",
     "dev": "mkdir -p ./run && cd ./run && bun --watch ../index.ts",
     "test": "bun test"
   },

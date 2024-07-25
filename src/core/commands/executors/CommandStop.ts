@@ -12,6 +12,8 @@ export class CommandStop extends CommandBase {
     Terminal.instance.info("Stopping Zwip...");
     Zwip.instance.botManager.unloadAll();
     Terminal.instance.info("Goodbye and see you next time !");
-    process.exit(0);
+    setTimeout(() => {
+      process.exit(0);
+    }, 2000);
   }
 }

@@ -5,6 +5,9 @@ import { getDecoratedCommands } from './CommandDecorator';
 import { Terminal } from "../logger/Terminal";
 import { TerminalSender } from "./TerminalSender";
 
+import "./executors/CommandStop";
+import "./executors/CommandBot";
+
 export class CommandManager {
   private registeredCommands: CommandBase[];
   private terminal: Terminal;
@@ -16,15 +19,15 @@ export class CommandManager {
   }
 
   private async scanAndRegisterCommands() {
-    await CommandScanner.run();
+    // await CommandScanner.run();
     const commands = getDecoratedCommands();
-
     commands.forEach((commandMeta: CommandMetadata) => {
       this.registerCommand(commandMeta);
     });
   }
 
   public async handleCommand(rawInput: string) {
+
     if (rawInput.startsWith('!')) {
       rawInput = rawInput.replace('!', '');
     }
