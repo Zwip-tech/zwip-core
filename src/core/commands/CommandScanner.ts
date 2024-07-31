@@ -2,7 +2,7 @@ import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
 
 const TS_EXTENSION = '.ts';
-const COMMANDS_PATH = join(__dirname, '..', 'commands');
+const COMMANDS_PATH = join(__dirname, '..', 'commands/executors');
 
 export class CommandScanner {
   public static async run(): Promise<void> {

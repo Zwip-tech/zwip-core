@@ -5,7 +5,7 @@ import { CommandManager } from "../commands/CommandManager";
 
 export class Terminal {
   private readonly logger: Logger;
-  private readonly commandManager: CommandManager;
+  public readonly commandManager: CommandManager;
   public static instance: Terminal;
 
   constructor() {

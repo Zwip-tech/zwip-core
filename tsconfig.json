@@ -20,7 +20,11 @@
     "emitDecoratorMetadata": true,
     "types": [
       "bun-types" // add Bun global
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "zwip-core": ["."]
+    }
   },
   "include": [
     "serverline.d.ts"
