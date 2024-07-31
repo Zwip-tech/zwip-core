@@ -11,6 +11,7 @@ export class Zwip {
   
   constructor() {
     Zwip.instance = this;
+
     this.terminal = new Terminal();
     this.botManager = new BotManager();
     this.pluginLoader = new PluginLoader();
