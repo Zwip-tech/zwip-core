@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
     "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": true,
     "lib": ["ESNext"],
     "module": "esnext",
     "target": "esnext",
     "moduleResolution": "Bundler",
     "moduleDetection": "force",
     "allowImportingTsExtensions": true,
-    "noEmit": true,
     "composite": true,
     "strict": true,
     "downlevelIteration": true,
@@ -27,6 +30,10 @@
     }
   },
   "include": [
-    "serverline.d.ts"
+    "serverline.d.ts",
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

@@ -1,5 +1,4 @@
 import { CommandBase } from "./CommandBase";
-import { CommandScanner } from "./CommandScanner";
 import { CommandMetadata } from "./CommandMetadata";
 import { getDecoratedCommands } from './CommandDecorator';
 import { Terminal } from "../logger/Terminal";
@@ -19,7 +18,6 @@ export class CommandManager {
   }
 
   private async scanAndRegisterCommands() {
-    // await CommandScanner.run();
     const commands = getDecoratedCommands();
     commands.forEach((commandMeta: CommandMetadata) => {
       this.registerCommand(commandMeta);
@@ -45,9 +43,5 @@ export class CommandManager {
   public registerCommand(commandMeta: CommandMetadata) {
     this.registeredCommands.push(new commandMeta.target(commandMeta.label, commandMeta.aliases));
     this.terminal.debug(`Command registered: ${commandMeta.label}`);
-  }
-
-  get commands() {
-    return this.commands;
   }
 }
