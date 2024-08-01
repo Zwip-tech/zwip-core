@@ -9,7 +9,7 @@ export class Bot {
   public client?: Client;
   public presence: PresenceStatusData;
 
-  public constructor(id: string, token: string, presence: PresenceStatusData) {
+  public constructor(id: string, token: string, presence?: PresenceStatusData) {
     this.id = id;
     this.presence = presence ?? 'online';
     this.isMaster = false;
