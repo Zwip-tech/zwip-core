@@ -21,7 +21,7 @@ export class Bot {
   public async start() {
     this.client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-    this.client.on(Events.ClientReady, async() => {
+    this.client.once(Events.ClientReady, async() => {
       if (!this.client) {
         Terminal.instance.fatal("Client is undefined.");
         return;
