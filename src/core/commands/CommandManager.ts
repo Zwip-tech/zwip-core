@@ -5,6 +5,7 @@ import { Terminal } from "../logger/Terminal";
 
 import "./executors/CommandStop";
 import "./executors/CommandBot";
+import "./executors/CommandPlugins";
 
 export class CommandManager {
   public registeredCommands: CommandBase[];

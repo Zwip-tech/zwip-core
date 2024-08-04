@@ -1,15 +1,15 @@
 import { Terminal } from "./logger/Terminal";
 import { BotManager } from "./bot/BotManager";
-import { PluginLoader} from "./plugins/PluginLoader";
 import { CommandManager } from "./commands/CommandManager";
 import { EventManager } from "./events/EventManager";
+import { PluginManager } from "./plugins/PluginManager";
 
 export class Zwip {
   public readonly terminal: Terminal;
   public readonly botManager: BotManager;
   public readonly commandManager: CommandManager;
   public readonly eventManager: EventManager;
-  private readonly pluginLoader: PluginLoader;
+  public readonly pluginManager: PluginManager;
   
   public static instance: Zwip;
   
@@ -20,7 +20,7 @@ export class Zwip {
     this.eventManager = new EventManager();
     this.commandManager = new CommandManager();
     this.botManager = new BotManager();
-    this.pluginLoader = new PluginLoader();
+    this.pluginManager = new PluginManager();
   }
 
   public async run() {
@@ -28,7 +28,7 @@ export class Zwip {
 
     try {
       this.commandManager.registerInternalCommands();
-      await this.pluginLoader.loadAll();
+      this.pluginManager.init();
       await this.botManager.loadAll();
     } catch (e: any) {
       this.terminal.error(`Error while loading Zwip: ${e.message}`);
