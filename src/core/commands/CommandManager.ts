@@ -12,13 +12,12 @@ export class CommandManager {
 
   private static COMMAND_MARKER = '!';
   
-  constructor(terminal: Terminal) {
+  constructor() {
     this.registeredCommands = [];
-    this.terminal = terminal;
-    this.scanAndRegisterCommands();
+    this.terminal = Terminal.instance;
   }
 
-  private async scanAndRegisterCommands() {
+  public registerInternalCommands() {
     const commands = getDecoratedCommands();
     commands.forEach((commandMeta: CommandMetadata) => {
       this.registerCommand(commandMeta);
@@ -42,6 +41,6 @@ export class CommandManager {
   
   public registerCommand(commandMeta: CommandMetadata) {
     this.registeredCommands.push(new commandMeta.target(commandMeta.label, commandMeta.aliases));
-    this.terminal.debug(`Command registered: ${commandMeta.label}`);
+    this.terminal.debug(`Registered command: ${commandMeta.label}`);
   }
 }

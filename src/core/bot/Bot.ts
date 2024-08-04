@@ -1,7 +1,7 @@
-import { Client, GatewayIntentBits, Events, ActivityType, PresenceStatusData, SlashCommandBuilder, RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js";
+import { Client, GatewayIntentBits, Events, ActivityType, PresenceStatusData, RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js";
 import { Terminal } from "../logger/Terminal";
 import { Zwip } from "../Zwip";
-import { REST, Routes, EmbedBuilder } from "discord.js";
+import { REST, Routes } from "discord.js";
 
 export class Bot {
   public id: string;
@@ -37,23 +37,22 @@ export class Bot {
         return;
       } 
 
-      Terminal.instance.info(`Bot ${this.id} is loaded and ready to go!`);
-
       this.client.user.setPresence({ status: this.presence });
       this.client.user.setActivity("Made with Zwip", { type: ActivityType.Custom });
       
       const rest = new REST({ version: "10" }).setToken(this.token);
 
       try {
+        //! TODO: Remove hardcoded guild id
         await rest.put(Routes.applicationGuildCommands(this.client.application.id, "1205916392134811658"), { body: [] })
-        Terminal.instance.debug("Successfully deleted all guild commands.");
+        Terminal.instance.debug(`Successfully deleted all guild commands for bot ${this.client.user.username}.`);
       } catch (error) {
         Terminal.instance.error("Error while deleting guild commands.");
       }
 
       if (this.isMaster) {
         let jsonSlashCommand;
-        const commandManager = Zwip.instance.terminal.commandManager;
+        const commandManager = Zwip.instance.commandManager;
         const slashCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
 
         for (const command of commandManager.registeredCommands) {
@@ -66,6 +65,7 @@ export class Bot {
           slashCommands.push(jsonSlashCommand)
         }
 
+        //! TODO: Remove hardcoded guild id
         rest.put(Routes.applicationGuildCommands(this.client.application.id, "1205916392134811658"), { body: slashCommands }).then(() => {
           Terminal.instance.debug("Slashes commands registered."); 
         }).catch((error) => {
@@ -73,12 +73,13 @@ export class Bot {
           Terminal.instance.error(error);
         });
       }
+      Terminal.instance.info(`Bot ${this.id} is loaded and ready!`);
     });
 
     this.client.on(Events.InteractionCreate, async (interaction) => {
       if (!interaction.isCommand()) return;
 
-      const commandManager = Zwip.instance.terminal.commandManager;
+      const commandManager = Zwip.instance.commandManager;
       const command = commandManager.registeredCommands.find((c) => c.label === interaction.commandName);
 
       if (!command) {

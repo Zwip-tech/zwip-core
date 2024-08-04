@@ -1,11 +1,14 @@
 import { Terminal } from "./logger/Terminal";
 import { BotManager } from "./bot/BotManager";
 import { PluginLoader} from "./plugins/PluginLoader";
+import { CommandManager } from "./commands/CommandManager";
 
 export class Zwip {
-  public terminal: Terminal;
-  public botManager: BotManager;
-  private pluginLoader: PluginLoader;
+  public readonly terminal: Terminal;
+  public readonly botManager: BotManager;
+  public readonly commandManager: CommandManager;
+  private readonly pluginLoader: PluginLoader;
+  
   
   public static instance: Zwip;
   
@@ -13,19 +16,21 @@ export class Zwip {
     Zwip.instance = this;
 
     this.terminal = new Terminal();
+    this.commandManager = new CommandManager();
     this.botManager = new BotManager();
     this.pluginLoader = new PluginLoader();
   }
 
-  public run() {
+  public async run() {
     this.terminal.info("Starting Zwip...");
-    this.botManager.loadAll().then(() => {
-      this.terminal.info("All bots loaded.");
-      this.terminal.info("Loading plugins...");
-      this.pluginLoader.loadAll().then(() => {
-        this.terminal.info("All plugins loaded.");
-        this.terminal.info("Zwip is now running.");
-      });
-    });
+
+    try {
+      this.commandManager.registerInternalCommands();
+      await this.pluginLoader.loadAll();
+      await this.botManager.loadAll();
+    } catch (e: any) {
+      this.terminal.error(`Error while loading Zwip: ${e.message}`);
+      return;
+    }
   }
 }
