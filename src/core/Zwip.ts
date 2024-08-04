@@ -2,13 +2,14 @@ import { Terminal } from "./logger/Terminal";
 import { BotManager } from "./bot/BotManager";
 import { PluginLoader} from "./plugins/PluginLoader";
 import { CommandManager } from "./commands/CommandManager";
+import { EventManager } from "./events/EventManager";
 
 export class Zwip {
   public readonly terminal: Terminal;
   public readonly botManager: BotManager;
   public readonly commandManager: CommandManager;
+  public readonly eventManager: EventManager;
   private readonly pluginLoader: PluginLoader;
-  
   
   public static instance: Zwip;
   
@@ -16,6 +17,7 @@ export class Zwip {
     Zwip.instance = this;
 
     this.terminal = new Terminal();
+    this.eventManager = new EventManager();
     this.commandManager = new CommandManager();
     this.botManager = new BotManager();
     this.pluginLoader = new PluginLoader();

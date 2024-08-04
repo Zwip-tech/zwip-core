@@ -19,7 +19,7 @@ export class Bot {
   }
 
   public async start() {
-    this.client = new Client({ intents: [GatewayIntentBits.Guilds] });
+    this.client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
     this.client.once(Events.ClientReady, async() => {
       if (!this.client) {
@@ -71,6 +71,16 @@ export class Bot {
         }).catch((error) => {
           Terminal.instance.error("Error while registering slash commands.");
           Terminal.instance.error(error);
+        });
+
+        const eventManager = Zwip.instance.eventManager;
+
+        eventManager.botEvents.forEach((events, namespace) => {
+          Terminal.instance.debug(`Registering events for namespace: ${namespace}`);
+          events.forEach((listener) => {
+            Terminal.instance.debug(`Registering event: ${listener.event}`);
+            this.client?.on(listener.event, listener.callback);
+          });
         });
       }
       Terminal.instance.info(`Bot ${this.id} is loaded and ready!`);
