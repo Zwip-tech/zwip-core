@@ -2,14 +2,15 @@ import { CommandBase } from "./CommandBase";
 import { CommandMetadata } from "./CommandMetadata";
 import { getDecoratedCommands } from './CommandDecorator';
 import { Terminal } from "../logger/Terminal";
-import { TerminalSender } from "./TerminalSender";
 
 import "./executors/CommandStop";
 import "./executors/CommandBot";
 
 export class CommandManager {
-  private registeredCommands: CommandBase[];
+  public registeredCommands: CommandBase[];
   private terminal: Terminal;
+
+  private static COMMAND_MARKER = '!';
   
   constructor(terminal: Terminal) {
     this.registeredCommands = [];
@@ -25,11 +26,10 @@ export class CommandManager {
   }
 
   public async handleCommand(rawInput: string) {
-
-    if (rawInput.startsWith('!')) {
-      rawInput = rawInput.replace('!', '');
+    if (rawInput.startsWith(CommandManager.COMMAND_MARKER)) {
+      rawInput = rawInput.replace(CommandManager.COMMAND_MARKER, '');
     }
-    const input = rawInput.split(' '); 
+    const input = rawInput.split(' ');
     const commandLabel = input.shift() || '';
     const args = input;
     const command = this.registeredCommands.find((c) => c.label === commandLabel || c.aliases.includes(commandLabel));
@@ -37,7 +37,7 @@ export class CommandManager {
       this.terminal.error(`Command not found: ${commandLabel}`);
       return;
     }
-    command.execute(new TerminalSender(), args);
+    command.executeTerminalCommand(args);
   }
   
   public registerCommand(commandMeta: CommandMetadata) {
