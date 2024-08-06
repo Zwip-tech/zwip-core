@@ -1,4 +1,6 @@
 import { ClientEvents } from "discord.js";
+import { ZwipEventEmitter } from "./ZwipEventEmitter";
+import { ZwipEvents } from "./ZwipEvents";
 
 type EventCallback<Event extends keyof ClientEvents> = {
   event: Event;
@@ -7,11 +9,11 @@ type EventCallback<Event extends keyof ClientEvents> = {
 
 export class EventManager {
   public readonly botEvents: Map<string, Array<EventCallback<keyof ClientEvents>>>;
-  public readonly zwipEvents: Map<string, [{ event: Event, callback: Function}]>; //TODO: Implement Zwip events
+  public readonly zwipEventsEmitter: ZwipEventEmitter;
 
   constructor() {
     this.botEvents = new Map();
-    this.zwipEvents = new Map();
+    this.zwipEventsEmitter = new ZwipEventEmitter();
   }
 
   public registerBotEvent<Event extends keyof ClientEvents>(event: Event, callback: (...args: ClientEvents[Event]) => void, namespace: string) {
@@ -22,7 +24,11 @@ export class EventManager {
     this.botEvents.set(namespace, listeners);
   }
 
-  public registerZwipEvent() {
-    throw new Error("Feature not implemented.");
+  public registerZwipEvent<Event extends keyof ZwipEvents>(zwipEvent: Event, callback: (...args: ZwipEvents[Event]) => void) {
+    this.zwipEventsEmitter.on(zwipEvent, callback);
+  }
+
+  public emitZwipEvent<Event extends keyof ZwipEvents>(zwipEvent: Event, ...args: ZwipEvents[Event]) {
+    this.zwipEventsEmitter.emit(zwipEvent, ...args);
   }
 }
