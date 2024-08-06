@@ -40,8 +40,15 @@ export class CommandManager {
     command.executeTerminalCommand(args);
   }
   
-  public registerCommand(commandMeta: CommandMetadata) {
-    this.registeredCommands.push(new commandMeta.target(commandMeta.label, commandMeta.aliases));
-    this.terminal.debug(`Registered command: ${commandMeta.label}`);
+  public registerCommand(commandBase: CommandBase): void;
+  public registerCommand(commandMeta: CommandMetadata): void;
+  public registerCommand(command: CommandBase | CommandMetadata): void {
+    if (command instanceof CommandBase) {
+      this.registeredCommands.push(command);
+      this.terminal.debug(`Registered command: ${command.label}`);
+    } else {
+      this.registeredCommands.push(new command.target(command.label, command.aliases));
+      this.terminal.debug(`Registered command: ${command.label}`);
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, Events, ActivityType, PresenceStatusData, RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js";
+import { Client, GatewayIntentBits, Events, ActivityType, PresenceStatusData, RESTPostAPIChatInputApplicationCommandsJSONBody, Message } from "discord.js";
 import { Terminal } from "../logger/Terminal";
 import { Zwip } from "../Zwip";
 import { REST, Routes } from "discord.js";
@@ -19,7 +19,7 @@ export class Bot {
   }
 
   public async start() {
-    this.client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
+    this.client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
     this.client.once(Events.ClientReady, async() => {
       if (!this.client) {
@@ -75,6 +75,8 @@ export class Bot {
 
         const eventManager = Zwip.instance.eventManager;
 
+        eventManager.registerBotEvent(Events.MessageCreate, (message: Message) => {
+        }, "bot");
         eventManager.botEvents.forEach((events, namespace) => {
           Terminal.instance.debug(`Registering events for namespace: ${namespace}`);
           events.forEach((listener) => {
