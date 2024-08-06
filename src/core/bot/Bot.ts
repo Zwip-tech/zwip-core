@@ -1,7 +1,6 @@
-import { Client, GatewayIntentBits, Events, ActivityType, PresenceStatusData, RESTPostAPIChatInputApplicationCommandsJSONBody, Message } from "discord.js";
+import { Client, GatewayIntentBits, Events, ActivityType, PresenceStatusData } from "discord.js";
 import { Terminal } from "../logger/Terminal";
-import { Zwip } from "../Zwip";
-import { REST, Routes } from "discord.js";
+import { ActionChangePresence } from "../actions/ActionChangePresence";
 
 export class Bot {
   public id: string;
@@ -10,7 +9,7 @@ export class Bot {
   public client?: Client;
   public presence: PresenceStatusData;
 
-  public constructor(id: string, token: string, presence?: PresenceStatusData) {
+  public constructor(id: string, token: string, presence: PresenceStatusData) {
     this.id = id;
     this.presence = presence ?? 'online';
     this.isMaster = false;
@@ -18,88 +17,13 @@ export class Bot {
     this.client = undefined;
   }
 
-  public async start() {
-    this.client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+  public start() {
+    this.client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-    this.client.once(Events.ClientReady, async() => {
-      if (!this.client) {
-        Terminal.instance.fatal("Client is undefined.");
-        return;
-      }
-
-      if (!this.client.user) {
-        Terminal.instance.fatal("User is undefined.");
-        return;
-      }
-
-      if (!this.client.application) {
-        Terminal.instance.fatal("Application is undefined.");
-        return;
-      } 
-
-      this.client.user.setPresence({ status: this.presence });
-      this.client.user.setActivity("Made with Zwip", { type: ActivityType.Custom });
-      
-      const rest = new REST({ version: "10" }).setToken(this.token);
-
-      try {
-        //! TODO: Remove hardcoded guild id
-        await rest.put(Routes.applicationGuildCommands(this.client.application.id, "1205916392134811658"), { body: [] })
-        Terminal.instance.debug(`Successfully deleted all guild commands for bot ${this.client.user.username}.`);
-      } catch (error) {
-        Terminal.instance.error("Error while deleting guild commands.");
-      }
-
-      if (this.isMaster) {
-        let jsonSlashCommand;
-        const commandManager = Zwip.instance.commandManager;
-        const slashCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
-
-        for (const command of commandManager.registeredCommands) {
-          jsonSlashCommand = command.buildSlashCommand();
-
-          if (!jsonSlashCommand) {
-            Terminal.instance.debug(`Ignoring Slash Command registration for command: ${command.label}`);
-            continue;
-          }
-          slashCommands.push(jsonSlashCommand)
-        }
-
-        //! TODO: Remove hardcoded guild id
-        rest.put(Routes.applicationGuildCommands(this.client.application.id, "1205916392134811658"), { body: slashCommands }).then(() => {
-          Terminal.instance.debug("Slashes commands registered."); 
-        }).catch((error) => {
-          Terminal.instance.error("Error while registering slash commands.");
-          Terminal.instance.error(error);
-        });
-
-        const eventManager = Zwip.instance.eventManager;
-
-        eventManager.registerBotEvent(Events.MessageCreate, (message: Message) => {
-        }, "bot");
-        eventManager.botEvents.forEach((events, namespace) => {
-          Terminal.instance.debug(`Registering events for namespace: ${namespace}`);
-          events.forEach((listener) => {
-            Terminal.instance.debug(`Registering event: ${listener.event}`);
-            this.client?.on(listener.event, listener.callback);
-          });
-        });
-      }
-      Terminal.instance.info(`Bot ${this.id} is loaded and ready!`);
-    });
-
-    this.client.on(Events.InteractionCreate, async (interaction) => {
-      if (!interaction.isCommand()) return;
-
-      const commandManager = Zwip.instance.commandManager;
-      const command = commandManager.registeredCommands.find((c) => c.label === interaction.commandName);
-
-      if (!command) {
-        Terminal.instance.error(`Command not found: ${interaction.commandName}`);
-        return;
-      }
-      command.executeSlashCommand(interaction);
-      Terminal.instance.info(`User ${interaction.user.username} (${interaction.user.id}) executed command: ${interaction.commandName}`);
+    this.client.on(Events.ClientReady, () => {
+      Terminal.instance.info(`Bot ${this.id} is loaded and ready to go!`);
+      this.client?.user?.setPresence({ status: this.presence });
+      this.client?.user?.setActivity("Made with Zwip", { type: ActivityType.Custom });
     });
 
     this.client.login(this.token);

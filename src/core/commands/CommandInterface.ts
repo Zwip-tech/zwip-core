@@ -1,7 +1,5 @@
-import { CommandInteraction, RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js";
+import { CommandSender } from "./CommandSender";
 
 export interface CommandInterface {
-  buildSlashCommand(): RESTPostAPIChatInputApplicationCommandsJSONBody | null;
-  executeSlashCommand(interaction: CommandInteraction): void;
-  executeTerminalCommand(args: string[]): void;
+  execute(sender: CommandSender, args: string[]): void;
 }

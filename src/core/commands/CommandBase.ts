@@ -1,8 +1,7 @@
-import { CommandInteraction, RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js";
 import { CommandInterface } from "./CommandInterface";
-import { Terminal } from "../logger/Terminal";
+import { CommandSender } from "./CommandSender";
 
-export abstract class CommandBase implements CommandInterface {
+export class CommandBase implements CommandInterface {
   public label: string;
   public aliases: string[];
 
@@ -11,13 +10,7 @@ export abstract class CommandBase implements CommandInterface {
     this.aliases = aliases;
   }
 
-  public buildSlashCommand(): RESTPostAPIChatInputApplicationCommandsJSONBody | null {
-    return null;
-  };
-  public executeTerminalCommand(_args: string[]): void {
-    Terminal.instance.warn("This command does not support terminal execution.");
-  };
-  public executeSlashCommand(_interaction: CommandInteraction): void {
-    Terminal.instance.warn("This command does not support slash command execution.");
-  };
+  execute(sender: CommandSender, args: string[]): void {
+    throw new Error("Command not implemented.");
+  }
 }
