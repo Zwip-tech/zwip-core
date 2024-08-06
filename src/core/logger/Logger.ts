@@ -1,6 +1,8 @@
 import chalk from "chalk";
 import { LogLevel } from "./LogLevel";
 
++LogLevel // Fix Bun bundle error https://github.com/oven-sh/bun/issues/12805
+
 export class Logger {
   public write(level: LogLevel, message: string) {
     switch (level) {

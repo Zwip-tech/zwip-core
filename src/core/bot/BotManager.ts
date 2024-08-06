@@ -15,6 +15,13 @@ export class BotManager {
       Terminal.instance.error(`Bot registration failed. Token already in use. (${bot.token})`);
       return;
     }
+
+    const isMaster = this.bots.length === 0;
+
+    if (isMaster) {
+      Terminal.instance.info(`Bot ${bot.id} is the master bot.`);
+      bot.isMaster = this.bots.length === 0;
+    }
     bot.start();
     this.bots.push(bot);
   }
@@ -27,6 +34,10 @@ export class BotManager {
 
     bot.stop();
     this.bots = this.bots.filter((b) => b.id !== bot.id);
+  }
+
+  public get masterBot() {
+    return this.bots.find((b) => b.isMaster);
   }
 
   public getBot(id: string) {

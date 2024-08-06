@@ -1,18 +1,16 @@
 import * as serverline from "serverline";
 import { Logger } from "./Logger";
 import { LogLevel } from "./LogLevel";
-import { CommandManager } from "../commands/CommandManager";
+import { Zwip } from "../Zwip";
 
 export class Terminal {
   private readonly logger: Logger;
-  private readonly commandManager: CommandManager;
   public static instance: Terminal;
 
   constructor() {
     Terminal.instance = this;
     this.logger = new Logger();
     this.initInputStream();
-    this.commandManager = new CommandManager(this);
   }
 
   private initInputStream() {
@@ -21,7 +19,7 @@ export class Terminal {
     });
 
     serverline.on("line", (line: string) => {
-      this.commandManager.handleCommand(line);
+      Zwip.instance.commandManager.handleCommand(line);
     });
   }
 
