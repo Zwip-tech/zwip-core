@@ -89,7 +89,7 @@ export class Bot {
     });
 
     this.client.on(Events.InteractionCreate, async (interaction) => {
-      if (!interaction.isCommand()) return;
+      if (!interaction.isChatInputCommand()) return;
 
       const commandManager = Zwip.instance.commandManager;
       const command = commandManager.registeredCommands.find((c) => c.label === interaction.commandName);

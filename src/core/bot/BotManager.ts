@@ -44,6 +44,10 @@ export class BotManager {
     return this.bots.find((b) => b.id === id);
   }
 
+  public getBotByUsername(username: string): Bot | undefined {
+    return this.bots.find((b) => b.client?.user?.username === username);
+  }
+
   public exists(token: string) {
     return this.bots.find((b) => b.token === token);
   }

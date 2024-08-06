@@ -1,7 +1,7 @@
-import { CommandInteraction, RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js";
+import { ChatInputCommandInteraction, RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js";
 
 export interface CommandInterface {
   buildSlashCommand(): RESTPostAPIChatInputApplicationCommandsJSONBody | null;
-  executeSlashCommand(interaction: CommandInteraction): void;
+  executeSlashCommand(interaction: ChatInputCommandInteraction): void;
   executeTerminalCommand(args: string[]): void;
 }

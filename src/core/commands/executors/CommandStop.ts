@@ -1,7 +1,7 @@
 import { CommandBase } from "../CommandBase";
 import { Command } from "../CommandDecorator";
 import { ActionStopZwip } from "../../actions/ActionStopZwip";
-import { CommandInteraction, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder } from "discord.js";
 
 @Command("stop", ["s"])
 export class CommandStop extends CommandBase {
@@ -13,7 +13,7 @@ export class CommandStop extends CommandBase {
     ActionStopZwip.run();
   }
 
-  public executeSlashCommand(interaction: CommandInteraction): void {
+  public executeSlashCommand(interaction: ChatInputCommandInteraction): void {
     interaction.reply({ content: "Goodbye and see you next time !", ephemeral: true });
     ActionStopZwip.run();
   }

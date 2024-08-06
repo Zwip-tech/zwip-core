@@ -1,7 +1,7 @@
 import { CommandBase } from "../CommandBase";
 import { ActionListPlugins } from "../../actions/ActionListPlugins";
 import { Command } from "../CommandDecorator";
-import { CommandInteraction, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder } from "discord.js";
 
 @Command("plugins", ["pl"])
 export class CommandPlugins extends CommandBase {
@@ -13,7 +13,7 @@ export class CommandPlugins extends CommandBase {
     ActionListPlugins.run();
   };
 
-  public executeSlashCommand(interaction: CommandInteraction): void {
+  public executeSlashCommand(interaction: ChatInputCommandInteraction): void {
     const embed = ActionListPlugins.run(true);
 
     if (embed) {
