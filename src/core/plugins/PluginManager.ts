@@ -1,9 +1,16 @@
 import { Plugin } from './Plugin';
+import { PluginLoader } from './PluginLoader';
 
 export class PluginManager {
-  // private plugins: Plugin[];
+  public plugins: Plugin[];
+  private pluginsLoader: PluginLoader;
 
-  public loadAll(): void {
-    // Load all plugins
+  constructor() {
+    this.plugins = [];
+    this.pluginsLoader = new PluginLoader();
+  }
+
+  public async init(): Promise<void> {
+    this.plugins = await this.pluginsLoader.loadAll();
   }
 }

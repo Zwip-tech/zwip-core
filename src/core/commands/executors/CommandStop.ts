@@ -1,19 +1,20 @@
-import { CommandSender } from "../CommandSender";
-import { Permission } from "../../permissions/PermissionDecorator";
 import { CommandBase } from "../CommandBase";
 import { Command } from "../CommandDecorator";
-import { Terminal } from "../../logger/Terminal";
-import { Zwip } from "../../Zwip";
+import { ActionStopZwip } from "../../actions/ActionStopZwip";
+import { CommandInteraction, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder } from "discord.js";
 
 @Command("stop", ["s"])
-@Permission("zwip.stop")
 export class CommandStop extends CommandBase {
-  public execute(sender: CommandSender, args: string[]): void {
-    Terminal.instance.info("Stopping Zwip...");
-    Zwip.instance.botManager.unloadAll();
-    Terminal.instance.info("Goodbye and see you next time !");
-    setTimeout(() => {
-      process.exit(0);
-    }, 2000);
+  public buildSlashCommand(): RESTPostAPIChatInputApplicationCommandsJSONBody {
+    return new SlashCommandBuilder().setName("stop").setDescription("Stop the bot").toJSON();
+  }
+
+  public executeTerminalCommand(_args: string[]): void {
+    ActionStopZwip.run();
+  }
+
+  public executeSlashCommand(interaction: CommandInteraction): void {
+    interaction.reply({ content: "Goodbye and see you next time !", ephemeral: true });
+    ActionStopZwip.run();
   }
 }

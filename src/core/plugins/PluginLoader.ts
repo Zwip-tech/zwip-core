@@ -6,7 +6,7 @@ import { Terminal } from "../logger/Terminal";
 export class PluginLoader {
   public static PLUGIN_FOLDER: string = "./plugins";
 
-  public async loadAll(): Promise<void> {
+  public async loadAll(): Promise<Plugin[]> {
     const directoryExists = await readdir(PluginLoader.PLUGIN_FOLDER).catch(() => false);
 
     if (!directoryExists) {
@@ -14,6 +14,7 @@ export class PluginLoader {
     }
 
     const pluginFiles = await readdir(PluginLoader.PLUGIN_FOLDER);
+    const plugins: Plugin[] = [];
 
     for (const file of pluginFiles) {
       if (file.endsWith(".js")) {
@@ -27,7 +28,7 @@ export class PluginLoader {
 
             plugin.onLoad();
             plugin.onEnable();
-            
+            plugins.push(plugin);
             Terminal.instance.info(`Plugin loaded: ${plugin.name}`);
           } catch (error) {
             console.error(`Failed to load plugin: ${file}`);
@@ -36,5 +37,7 @@ export class PluginLoader {
         })();
       }
     }
+
+    return plugins;
   }
 }

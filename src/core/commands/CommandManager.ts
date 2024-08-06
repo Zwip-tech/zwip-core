@@ -2,22 +2,23 @@ import { CommandBase } from "./CommandBase";
 import { CommandMetadata } from "./CommandMetadata";
 import { getDecoratedCommands } from './CommandDecorator';
 import { Terminal } from "../logger/Terminal";
-import { TerminalSender } from "./TerminalSender";
 
 import "./executors/CommandStop";
 import "./executors/CommandBot";
+import "./executors/CommandPlugins";
 
 export class CommandManager {
-  private registeredCommands: CommandBase[];
+  public registeredCommands: CommandBase[];
   private terminal: Terminal;
+
+  private static COMMAND_MARKER = '!';
   
-  constructor(terminal: Terminal) {
+  constructor() {
     this.registeredCommands = [];
-    this.terminal = terminal;
-    this.scanAndRegisterCommands();
+    this.terminal = Terminal.instance;
   }
 
-  private async scanAndRegisterCommands() {
+  public registerInternalCommands() {
     const commands = getDecoratedCommands();
     commands.forEach((commandMeta: CommandMetadata) => {
       this.registerCommand(commandMeta);
@@ -25,11 +26,10 @@ export class CommandManager {
   }
 
   public async handleCommand(rawInput: string) {
-
-    if (rawInput.startsWith('!')) {
-      rawInput = rawInput.replace('!', '');
+    if (rawInput.startsWith(CommandManager.COMMAND_MARKER)) {
+      rawInput = rawInput.replace(CommandManager.COMMAND_MARKER, '');
     }
-    const input = rawInput.split(' '); 
+    const input = rawInput.split(' ');
     const commandLabel = input.shift() || '';
     const args = input;
     const command = this.registeredCommands.find((c) => c.label === commandLabel || c.aliases.includes(commandLabel));
@@ -37,11 +37,18 @@ export class CommandManager {
       this.terminal.error(`Command not found: ${commandLabel}`);
       return;
     }
-    command.execute(new TerminalSender(), args);
+    command.executeTerminalCommand(args);
   }
   
-  public registerCommand(commandMeta: CommandMetadata) {
-    this.registeredCommands.push(new commandMeta.target(commandMeta.label, commandMeta.aliases));
-    this.terminal.debug(`Command registered: ${commandMeta.label}`);
+  public registerCommand(commandBase: CommandBase): void;
+  public registerCommand(commandMeta: CommandMetadata): void;
+  public registerCommand(command: CommandBase | CommandMetadata): void {
+    if (command instanceof CommandBase) {
+      this.registeredCommands.push(command);
+      this.terminal.debug(`Registered command: ${command.label}`);
+    } else {
+      this.registeredCommands.push(new command.target(command.label, command.aliases));
+      this.terminal.debug(`Registered command: ${command.label}`);
+    }
   }
 }

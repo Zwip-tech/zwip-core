@@ -13,9 +13,9 @@
   "types": "./dist/types/index.d.ts",
   "scripts": {
     "start": "mkdir -p ./run && cd ./run && bun run ../index.ts",
-    "build:bundle": "bun build src/index.ts --target bun --outfile ./dist/Zwip.js --minify --sourcemap",
-    "build:executable:apple-silicon": "bun build src/index.ts --compile --outfile ./dist/Zwip --minify",
-    "build:executable:windows-x64": "bun build src/index.ts --compile --target bun-windows-x64 --outfile ./dist/Zwip --minify",
+    "build:bundle": "bun build src/index.ts --target bun --outfile ./dist/Zwip.js --sourcemap",
+    "build:executable:apple-silicon": "bun build src/index.ts --compile --outfile ./dist/Zwip",
+    "build:executable:windows-x64": "bun build src/index.ts --compile --target bun-windows-x64 --outfile ./dist/Zwip",
     "build:declarations": "tsc --outDir ./dist/types",
     "dev": "mkdir -p ./run && cd ./run && bun --watch ../src/index.ts",
     "test": "bun test"
