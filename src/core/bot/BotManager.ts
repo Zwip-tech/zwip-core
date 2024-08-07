@@ -26,13 +26,13 @@ export class BotManager {
     this.bots.push(bot);
   }
 
-  public unregisterBot(bot: Bot) {
+  public async unregisterBot(bot: Bot) {
     if (!bot) {
       Terminal.instance.error(`Bot unregistration failed. Bot undefined.`);
       return;
     }
 
-    bot.stop();
+    await bot.stop();
     this.bots = this.bots.filter((b) => b.id !== bot.id);
   }
 
@@ -69,11 +69,9 @@ export class BotManager {
     }
   }
 
-  public async unloadAll() {
+  public unloadAll(): Promise<void>[] {
     Terminal.instance.debug("Unloading all bots...");
-    for (const bot of this.bots) {
-      this.unregisterBot(bot);
-    }
+    return this.bots.map((bot) => this.unregisterBot(bot));
   }
 
   public async saveBot(bot: Bot) {
