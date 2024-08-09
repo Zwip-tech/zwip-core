@@ -89,4 +89,22 @@ export class BotManager {
     await unlink(`${BotManager.BOTS_FOLDER}/${bot.id}.json`);
     Terminal.instance.info(`Bot deleted with id: ${bot.id}`);
   }
+
+  public pickRandomBot(): Bot {
+    return this.bots[Math.floor(Math.random() * this.bots.length)];
+  }
+
+  public defineNewMaster() {
+    if (this.masterBot) {
+      Terminal.instance.warn("Could not define a new master bot. Master bot already exists.");
+      return;
+    }
+
+    const bot = this.pickRandomBot();
+
+    this.bots.forEach((b) => b.isMaster = false);
+    bot.isMaster = true;
+    bot.restart();
+    Terminal.instance.info(`Bot ${bot.id} is the new master.`);
+  }
 }

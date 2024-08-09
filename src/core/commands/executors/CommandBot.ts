@@ -7,6 +7,7 @@ import { Command } from "../CommandDecorator";
 import { Terminal } from "../../logger/Terminal";
 import { ChatInputCommandInteraction, PresenceStatusData, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder } from "discord.js";
 import { Zwip } from "../../Zwip";
+import { ActionStopBot } from "src/core/actions/ActionStopBot";
 
 @Command("bot", ["b"])
 export class CommandBot extends CommandBase {
@@ -97,6 +98,13 @@ export class CommandBot extends CommandBase {
           }
 
           ActionChangePresence.run(args[1], args[2]);
+          break;
+        case "stop":
+          if (args.length < 2) {
+            Terminal.instance.error("Invalid usage: !bot stop <id>");
+            return;
+          }
+          ActionStopBot.run(args[1]);
           break;
         default:
           throw new Error("Invalid usage: !bot create <token>");

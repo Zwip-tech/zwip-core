@@ -2,6 +2,7 @@ import { Client, GatewayIntentBits, Events, ActivityType, PresenceStatusData, RE
 import { Terminal } from "../logger/Terminal";
 import { Zwip } from "../Zwip";
 import { REST, Routes } from "discord.js";
+import { SlashCommandHelper } from "../commands/SlashCommandHelper";
 
 export class Bot {
   public id: string;
@@ -42,13 +43,7 @@ export class Bot {
       
       const rest = new REST({ version: "10" }).setToken(this.token);
 
-      try {
-        //! TODO: Remove hardcoded guild id
-        await rest.put(Routes.applicationGuildCommands(this.client.application.id, "1205916392134811658"), { body: [] })
-        Terminal.instance.debug(`Successfully deleted all guild commands for bot ${this.client.user.username}.`);
-      } catch (error) {
-        Terminal.instance.error("Error while deleting guild commands.");
-      }
+      SlashCommandHelper.deleteAllGuildCommands();
 
       if (this.isMaster) {
         let jsonSlashCommand;
@@ -65,13 +60,9 @@ export class Bot {
           slashCommands.push(jsonSlashCommand)
         }
 
+        SlashCommandHelper.registerGuildSlashCommands(slashCommands);
         //! TODO: Remove hardcoded guild id
-        rest.put(Routes.applicationGuildCommands(this.client.application.id, "1205916392134811658"), { body: slashCommands }).then(() => {
-          Terminal.instance.debug("Slashes commands registered."); 
-        }).catch((error) => {
-          Terminal.instance.error("Error while registering slash commands.");
-          Terminal.instance.error(error);
-        });
+
 
         const eventManager = Zwip.instance.eventManager;
 
